@@ -1,68 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chat</title>
+    <title>Chat App</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         #chat {
-            border: 1px solid #ccc;
-            padding: 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
             height: 300px;
             overflow-y: scroll;
+            border: 1px solid #ccc;
+        }
+        #chat li {
+            padding: 8px;
+            margin-bottom: 10px;
+            background-color: #f1f1f1;
+        }
+        #username, #message {
+            width: calc(100% - 22px);
+            padding: 10px;
             margin-bottom: 10px;
         }
-        #messageInput {
-            width: calc(100% - 60px);
-        }
         #sendButton {
-            width: 50px;
+            padding: 10px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>WebSocket Chat</h1>
-    <div id="chat"></div>
-    <input type="text" id="messageInput" placeholder="Type a message...">
+    <h1>Chat App</h1>
+    <ul id="chat"></ul>
+    <input id="username" type="text" placeholder="Username">
+    <input id="message" type="text" placeholder="Message">
     <button id="sendButton">Send</button>
-
     <script>
-        var ws = new WebSocket("ws://localhost:8080/ws");
+        const chat = document.getElementById('chat');
+        const usernameInput = document.getElementById('username');
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('sendButton');
 
-        ws.onopen = function(event) {
-            console.log("WebSocket is open now.");
-        };
+        const ws = new WebSocket('ws://localhost:8080/ws');
 
         ws.onmessage = function(event) {
-            var chat = document.getElementById("chat");
-            var message = document.createElement("div");
-            message.textContent = "Server: " + event.data;
-            chat.appendChild(message);
-            chat.scrollTop = chat.scrollHeight;
+            const msg = JSON.parse(event.data);
+            const item = document.createElement('li');
+            item.textContent = `${msg.username}: ${msg.message}`;
+            chat.appendChild(item);
+            chat.scrollTop = chat.scrollHeight; // 自動スクロール
         };
 
-        ws.onclose = function(event) {
-            console.log("WebSocket is closed now.");
+        sendButton.onclick = function() {
+            sendMessage();
         };
 
-        ws.onerror = function(event) {
-            console.error("WebSocket error observed:", event);
-        };
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
 
-        document.getElementById("sendButton").onclick = function() {
-            var input = document.getElementById("messageInput");
-            var message = input.value;
-            ws.send(message);
-            var chat = document.getElementById("chat");
-            var userMessage = document.createElement("div");
-            userMessage.textContent = "You: " + message;
-            chat.appendChild(userMessage);
-            chat.scrollTop = chat.scrollHeight;
-            input.value = '';
-        };
+        function sendMessage() {
+            if (usernameInput.value === '' || messageInput.value === '') {
+                alert('Username and message cannot be empty');
+                return;
+            }
+
+            const message = {
+                username: usernameInput.value,
+                message: messageInput.value
+            };
+            ws.send(JSON.stringify(message));
+            messageInput.value = '';
+        }
     </script>
 </body>
 </html>
