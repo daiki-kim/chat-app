@@ -49,7 +49,7 @@ func HandleMessages() {
 		for client := range clients {
 			err := client.WriteJSON(msg)
 			if err != nil {
-				log.Printf("erro: %v", err)
+				log.Printf("error: %v", err)
 				client.Close()
 				delete(clients, client)
 			}
