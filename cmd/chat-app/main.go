@@ -4,39 +4,20 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/websocket"
+	"github.com/daiki-kim/chat-app/pkg/websocket"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
-
-func handleConnetions(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-
-	for {
-		_, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", msg)
-	}
-}
-
 func main() {
-	http.HandleFunc("/ws", handleConnetions)
+	fs := http.FileServer(http.Dir("./public"))
+	http.Handle("/", fs)
+
+	http.HandleFunc("/ws", websocket.HandleConnections)
+
+	go websocket.HandleMessages()
+
 	log.Println("http server started on :8080")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		log.Fatal("error starting http server: ", err)
 	}
 }
