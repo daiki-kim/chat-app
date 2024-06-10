@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/daiki-kim/chat-app/pkg/db"
 	"github.com/gorilla/websocket"
 )
 
@@ -39,6 +40,7 @@ func HandleConnections(w http.ResponseWriter, r *http.Request) {
 			delete(clients, conn)
 			break
 		}
+		saveMessage(msg)
 		broadcast <- msg
 	}
 }
@@ -54,5 +56,12 @@ func HandleMessages() {
 				delete(clients, client)
 			}
 		}
+	}
+}
+
+func saveMessage(msg Message) {
+	_, err := db.DB.Exec("INSERT INTO messages (username, message) VALUES ($1, $2)", msg.Username, msg.Message)
+	if err != nil {
+		log.Printf("failed to save message: %v", err)
 	}
 }
