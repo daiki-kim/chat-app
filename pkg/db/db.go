@@ -12,7 +12,7 @@ import (
 
 var DB *sqlx.DB
 
-func InitDB() {
+func init() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -32,10 +32,10 @@ func InitDB() {
 		log.Fatalln(err)
 	}
 
-	createTable()
+	createMessagesTable()
 }
 
-func createTable() {
+func createMessagesTable() {
 	schema := `
 	CREATE TABLE IF NOT EXISTS messages (
 		id SERIAL PRIMARY KEY,
