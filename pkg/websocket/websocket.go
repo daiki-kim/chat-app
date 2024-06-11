@@ -1,11 +1,14 @@
 package websocket
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/daiki-kim/chat-app/pkg/db"
 	"github.com/gorilla/websocket"
+
+	"github.com/daiki-kim/chat-app/pkg/db"
+	"github.com/daiki-kim/chat-app/pkg/redis"
 )
 
 var clients = make(map[*websocket.Conn]bool)
@@ -64,4 +67,27 @@ func saveMessage(msg Message) {
 	if err != nil {
 		log.Printf("failed to save message: %v", err)
 	}
+
+	msgJSON, err := json.Marshal(msg)
+	if err != nil {
+		log.Printf("failed to marshal message: %v", err)
+		return
+	}
+
+	err = redis.Rdb.Set(redis.Ctx, "latestMessage", msgJSON, 0).Err()
+	if err != nil {
+		log.Printf("failed to cache message: %v", err)
+	}
+}
+
+func getLatestMessage() (Message, error) {
+	var msg Message
+
+	msgJSON, err := redis.Rdb.Get(redis.Ctx, "latestMessage").Result()
+	if err != nil {
+		return msg, err
+	}
+
+	err = json.Unmarshal([]byte(msgJSON), &msg)
+	return msg, err
 }
