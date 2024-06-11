@@ -4,12 +4,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/daiki-kim/chat-app/pkg/db"
+	// "github.com/daiki-kim/chat-app/pkg/db"
 	"github.com/daiki-kim/chat-app/pkg/websocket"
 )
 
 func main() {
-	db.InitDB()
+	// db.InitDB()
 
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
