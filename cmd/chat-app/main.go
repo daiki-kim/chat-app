@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/daiki-kim/chat-app/pkg/db"
+	"github.com/daiki-kim/chat-app/pkg/models"
 	"github.com/daiki-kim/chat-app/pkg/redis"
 	"github.com/daiki-kim/chat-app/pkg/websocket"
 )
 
 func main() {
-	db.InitDB()
+	models.InitDB()
 	redis.InitRedis()
 
 	fs := http.FileServer(http.Dir("./public"))

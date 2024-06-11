@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/daiki-kim/chat-app/pkg/db"
+	"github.com/daiki-kim/chat-app/pkg/models"
 	"github.com/daiki-kim/chat-app/pkg/redis"
 )
 
@@ -44,6 +44,8 @@ func HandleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		saveMessage(msg)
+		redisMsg, _ := getLatestMessage()
+		log.Printf("latest message: %v", redisMsg)
 		broadcast <- msg
 	}
 }
@@ -63,7 +65,7 @@ func HandleMessages() {
 }
 
 func saveMessage(msg Message) {
-	_, err := db.DB.Exec("INSERT INTO messages (username, message) VALUES ($1, $2)", msg.Username, msg.Message)
+	_, err := models.DB.Exec("INSERT INTO messages (username, message) VALUES ($1, $2)", msg.Username, msg.Message)
 	if err != nil {
 		log.Printf("failed to save message: %v", err)
 	}
