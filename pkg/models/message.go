@@ -3,10 +3,10 @@ package models
 import "errors"
 
 type Message struct {
-	ID        int    `db:"id" json:"id"`
+	ID        int    `db:"id" json:"id,omitempty"`
 	Username  string `db:"username" json:"username"`
 	Message   string `db:"message" json:"message"`
-	Timestamp string `db:"timestamp" json:"timestamp"`
+	Timestamp string `db:"timestamp" json:"timestamp,omitempty"`
 }
 
 func CreateMessage(msg *Message) error {
