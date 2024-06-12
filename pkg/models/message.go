@@ -7,7 +7,7 @@ type Message struct {
 	Timestamp string `db:"timestamp" json:"timestamp"`
 }
 
-func (msg *Message) CreateMessage() error {
+func CreateMessage(msg Message) error {
 	_, err := DB.NamedExec(`INSERT INTO messages (username, message) VALUES (:username, :message)`, msg)
 	return err
 }
@@ -24,7 +24,7 @@ func GetMessageByID(id int) (Message, error) {
 	return msg, err
 }
 
-func (msg *Message) UpdateMessage() error {
+func UpdateMessage(msg Message) error {
 	_, err := DB.NamedExec(`UPDATE messages SET message=:message WHERE id=:id`, msg)
 	return err
 }
