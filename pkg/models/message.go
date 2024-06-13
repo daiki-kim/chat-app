@@ -33,11 +33,32 @@ func GetMessageByID(id int) (Message, error) {
 }
 
 func UpdateMessage(msg *Message) error {
-	_, err := DB.NamedExec(`UPDATE messages SET message=:message WHERE id=:id`, msg)
-	return err
+	result, err := DB.NamedExec(`UPDATE messages SET message=:message WHERE id=:id`, msg)
+	if err != nil {
+		return err
+	}
+	// sql.Result.RowsAffected() is the number of rows affected by executed command.
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return errors.New("message not found")
+	}
+	return nil
 }
 
 func DeleteMessage(id int) error {
-	_, err := DB.Exec(`DELETE FROM messages WHERE id = $1`, id)
-	return err
+	result, err := DB.Exec(`DELETE FROM messages WHERE id = $1`, id)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return errors.New("message not found")
+	}
+	return nil
 }
