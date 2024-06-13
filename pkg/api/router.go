@@ -26,6 +26,8 @@ func handleMessageByID(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		GetMessageByID(w, r)
+	case "PUT":
+		UpdateMessage(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}

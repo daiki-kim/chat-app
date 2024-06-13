@@ -56,3 +56,31 @@ func GetMessageByID(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(msg)
 }
+
+func UpdateMessage(w http.ResponseWriter, r *http.Request) {
+	msgID := r.URL.Query().Get("id")
+	if msgID == "" {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+	intMsgID, _ := strconv.Atoi(msgID)
+
+	var msg models.Message
+	err := json.NewDecoder(r.Body).Decode(&msg)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+	msg.ID = intMsgID
+	err = models.UpdateMessage(&msg)
+	if err != nil {
+		if err.Error() == "message not found" {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(msg)
+}
