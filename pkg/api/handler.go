@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -58,20 +59,18 @@ func GetMessageByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateMessage(w http.ResponseWriter, r *http.Request) {
-	msgID := r.URL.Query().Get("id")
-	if msgID == "" {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+	msgID, err := GetIdFromQuery(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	intMsgID, _ := strconv.Atoi(msgID)
-
 	var msg models.Message
-	err := json.NewDecoder(r.Body).Decode(&msg)
+	err = json.NewDecoder(r.Body).Decode(&msg)
 	if err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-	msg.ID = intMsgID
+	msg.ID = msgID
 	err = models.UpdateMessage(&msg)
 	if err != nil {
 		if err.Error() == "message not found" {
@@ -83,4 +82,13 @@ func UpdateMessage(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(msg)
+}
+
+func GetIdFromQuery(w http.ResponseWriter, r *http.Request) (int, error) {
+	msgID := r.URL.Query().Get("id")
+	if msgID == "" {
+		return 0, errors.New("invalid request payload")
+	}
+	intMsgID, _ := strconv.Atoi(msgID)
+	return intMsgID, nil
 }
