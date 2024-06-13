@@ -84,6 +84,23 @@ func UpdateMessage(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(msg)
 }
 
+func DeleteMessage(w http.ResponseWriter, r *http.Request) {
+	msgID, err := GetIdFromQuery(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if err := models.DeleteMessage(msgID); err != nil {
+		if err.Error() == "message not found" {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
 func GetIdFromQuery(w http.ResponseWriter, r *http.Request) (int, error) {
 	msgID := r.URL.Query().Get("id")
 	if msgID == "" {

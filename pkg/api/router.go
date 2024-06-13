@@ -28,6 +28,8 @@ func handleMessageByID(w http.ResponseWriter, r *http.Request) {
 		GetMessageByID(w, r)
 	case "PUT":
 		UpdateMessage(w, r)
+	case "DELETE":
+		DeleteMessage(w, r)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
