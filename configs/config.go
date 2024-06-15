@@ -53,7 +53,7 @@ func LoadEnv() error {
 		DBPort:              DBPort,
 		DBUser:              GetEnvDefault("DB_USER", "app"),
 		DBPassword:          GetEnvDefault("DB_PASSWORD", "password"),
-		DBName:              GetEnvDefault("DB_NAME", "api_database"),
+		DBName:              GetEnvDefault("DB_NAME", "chatdb"),
 		APICorsAllowOrigins: []string{"http://0.0.0.0:8001"},
 	}
 	return nil
