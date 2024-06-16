@@ -7,8 +7,8 @@ import (
 
 	"github.com/daiki-kim/chat-app/configs"
 	"github.com/daiki-kim/chat-app/pkg/logger"
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
-	_ "gutbub.com/lib/pq"
 )
 
 const (
