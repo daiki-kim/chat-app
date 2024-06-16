@@ -39,4 +39,3 @@ CREATE TABLE room_members (
     FOREIGN KEY (room_id) REFERENCES rooms(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-;
