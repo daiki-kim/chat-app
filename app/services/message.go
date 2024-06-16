@@ -5,7 +5,12 @@ import (
 	"github.com/daiki-kim/chat-app/app/repositories"
 )
 
-func CreateMessage(message *models.Message) error {
+func CreateMessage(roomID, senderID int, content string) error {
+	var message = &models.Message{
+		RoomID:   roomID,
+		SenderID: senderID,
+		Content:  content,
+	}
 	return repositories.CreateMessage(message)
 }
 
