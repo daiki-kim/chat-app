@@ -5,16 +5,21 @@ import (
 	"github.com/daiki-kim/chat-app/app/repositories"
 )
 
-func CreateRoom(room *models.Room, userIDs []int) error {
+func CreateRoom(name string, ownerID int, userIDs []int) error {
+	room := &models.Room{
+		Name:    name,
+		OwnerID: ownerID,
+	}
 	err := repositories.CreateRoom(room)
 	if err != nil {
 		return err
 	}
 
-	for _, userID := range userIDs {
+	roomUserIDs := append(userIDs, ownerID)
+	for _, userID := range roomUserIDs {
 		err = repositories.AddRoomMember(room.ID, userID)
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 	return nil

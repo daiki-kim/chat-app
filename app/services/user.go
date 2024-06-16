@@ -6,12 +6,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterUser(user *models.User) error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+func RegisterUser(username, email, password string) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	user.Password = string(hashedPassword)
+
+	user := &models.User{
+		Username: username,
+		Email:    email,
+		Password: string(hashedPassword),
+	}
 	return repositories.CreateUser(user)
 }
 
