@@ -12,17 +12,17 @@ import (
 func CreateRoom(w http.ResponseWriter, r *http.Request) {
 	ownerID := jwt.GetUserIDFromContext(r.Context())
 
-	var payload struct {
+	var requestBody struct {
 		Name    string `json:"name"`
 		UserIDs []int  `json:"user_ids"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
 		logger.Warn("failed to decode request body", zap.Error(err))
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err := services.CreateRoom(payload.Name, ownerID, payload.UserIDs)
+	err := services.CreateRoom(requestBody.Name, ownerID, requestBody.UserIDs)
 	if err != nil {
 		logger.Error("failed to create room", zap.Error(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
