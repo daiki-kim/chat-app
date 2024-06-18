@@ -32,6 +32,7 @@ type ConfigList struct {
 	DBUser              string
 	DBPassword          string
 	APICorsAllowOrigins []string
+	JwtSecret           string
 }
 
 func (c *ConfigList) IsDevelopment() bool {
@@ -54,6 +55,7 @@ func LoadEnv() error {
 		DBUser:              GetEnvDefault("DB_USER", "app"),
 		DBPassword:          GetEnvDefault("DB_PASSWORD", "password"),
 		DBName:              GetEnvDefault("DB_NAME", "chatdb"),
+		JwtSecret:           GetEnvDefault("JWT_SECRET", "secret"),
 		APICorsAllowOrigins: []string{"http://0.0.0.0:8001"},
 	}
 	return nil
