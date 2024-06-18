@@ -27,5 +27,6 @@ func TestInitEnv(t *testing.T) {
 	assert.Equal(t, os.Getenv("DB_NAME"), Config.DBName)
 	assert.Equal(t, os.Getenv("DB_USER"), Config.DBUser)
 	assert.Equal(t, os.Getenv("DB_PASSWORD"), Config.DBPassword)
+	assert.Equal(t, os.Getenv("JWT_SECRET"), Config.JwtSecret)
 	assert.Equal(t, true, Config.IsDevelopment())
 }
