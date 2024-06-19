@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/daiki-kim/chat-app/app/models"
 	"github.com/daiki-kim/chat-app/app/repositories"
+	"github.com/daiki-kim/chat-app/pkg/auth"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -30,6 +31,7 @@ func LoginUser(email, password string) (string, error) {
 		return "", err
 	}
 
-	// TODO: implement jwt token
-	return "token", nil
+	claim := auth.NewClaim(user.ID)
+	token, err := claim.GenerateToken()
+	return token, nil
 }
