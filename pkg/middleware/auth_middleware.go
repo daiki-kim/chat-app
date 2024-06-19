@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/daiki-kim/chat-app/pkg/jwt"
+	"github.com/daiki-kim/chat-app/pkg/auth"
 	"github.com/daiki-kim/chat-app/pkg/logger"
 	"go.uber.org/zap"
 )
@@ -26,14 +26,14 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		}
 
 		tokenStr := tokenParts[1]
-		claims, err := jwt.ParseToken(tokenStr)
+		claims, err := auth.ParseToken(tokenStr)
 		if err != nil {
 			logger.Error("failed to parse token", zap.Error(err))
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		r = r.WithContext(jwt.SetUserIDToContext(r.Context(), claims.UserID))
+		r = r.WithContext(auth.SetUserIDToContext(r.Context(), claims.UserID))
 		next.ServeHTTP(w, r)
 	})
 }
