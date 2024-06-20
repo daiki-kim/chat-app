@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/daiki-kim/chat-app/app/services"
+	"github.com/daiki-kim/chat-app/pkg/auth"
 	"github.com/daiki-kim/chat-app/pkg/logger"
 	"go.uber.org/zap"
 )
 
 func CreateRoom(w http.ResponseWriter, r *http.Request) {
-	ownerID := jwt.GetUserIDFromContext(r.Context())
+	ownerID := auth.GetUserIDFromContext(r.Context())
 
 	var requestBody struct {
 		Name    string `json:"name"`
@@ -34,7 +35,7 @@ func CreateRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRoomsForUser(w http.ResponseWriter, r *http.Request) {
-	ownerID := jwt.GetUserIDFromContext(r.Context())
+	ownerID := auth.GetUserIDFromContext(r.Context())
 
 	rooms, err := services.GetRoomsForUser(ownerID)
 	if err != nil {

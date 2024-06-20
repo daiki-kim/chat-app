@@ -10,6 +10,7 @@ import (
 
 	"github.com/daiki-kim/chat-app/app/models"
 	"github.com/daiki-kim/chat-app/app/services"
+	"github.com/daiki-kim/chat-app/pkg/auth"
 	"github.com/daiki-kim/chat-app/pkg/logger"
 )
 
@@ -50,7 +51,12 @@ func handleMessages() {
 func ChatRoom(w http.ResponseWriter, r *http.Request) {
 	roomIDStr := r.URL.Query().Get("room_id")
 	roomID, err := strconv.Atoi(roomIDStr)
-	userID := jwt.GetUserIDFromContext(r.Context())
+	if err != nil {
+		logger.Error("failed to parse room id", zap.Error(err))
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	userID := auth.GetUserIDFromContext(r.Context())
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
