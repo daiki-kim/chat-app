@@ -6,12 +6,13 @@ import (
 	"strconv"
 
 	"github.com/daiki-kim/chat-app/app/services"
+	"github.com/daiki-kim/chat-app/pkg/auth"
 	"github.com/daiki-kim/chat-app/pkg/logger"
 	"go.uber.org/zap"
 )
 
 func CreateMessage(w http.ResponseWriter, r *http.Request) {
-	senderID := jwt.GetUserIDFromContext(r.Context())
+	senderID := auth.GetUserIDFromContext(r.Context())
 	roomIDStr := r.URL.Query().Get("room_id")
 	roomID, err := strconv.Atoi(roomIDStr)
 	if err != nil {
