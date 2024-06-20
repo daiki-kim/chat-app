@@ -19,7 +19,7 @@ func main() {
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/qpi/v1/sienup", controllers.Register).Methods("POST")
+	r.HandleFunc("/api/v1/signup", controllers.Register).Methods("POST")
 	r.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 
 	s := r.PathPrefix("/api/v1").Subrouter()
@@ -35,5 +35,6 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
+	logger.Info("listening on port 8080")
 	http.ListenAndServe(":8080", r)
 }

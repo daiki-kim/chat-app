@@ -64,6 +64,8 @@ func ChatRoom(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	defer conn.Close()
+	logger.Info("client connected", zap.Int("room_id", roomID), zap.Int("user_id", userID))
 
 	// Add the client to the list of connected clients
 	client := &Client{
@@ -98,10 +100,12 @@ func ChatRoom(w http.ResponseWriter, r *http.Request) {
 		}
 
 		broadcast <- msg
+		logger.Info("message sent", zap.Int("room_id", roomID), zap.Int("user_id", userID), zap.String("content", msg.Content))
 	}
 
 	// Clean up when the client disconnects
 	mutex.Lock()
 	delete(clients, client)
 	mutex.Unlock()
+	logger.Info("client disconnected", zap.Int("room_id", roomID), zap.Int("user_id", userID))
 }
