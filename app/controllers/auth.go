@@ -30,6 +30,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("user created successfully")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "User created successfully"})
 }
@@ -49,6 +50,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("login successful", zap.String("token", token))
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"token": token})
 }

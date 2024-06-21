@@ -30,6 +30,7 @@ func CreateRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("room created successfully")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Room created successfully"})
 }
@@ -44,5 +45,6 @@ func GetRoomsForUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("rooms retrieved successfully")
 	json.NewEncoder(w).Encode(rooms)
 }

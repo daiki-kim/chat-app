@@ -36,6 +36,7 @@ func CreateMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("message sent successfully")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Message sent successfully"})
 }
@@ -56,5 +57,6 @@ func GetMessagesForRoom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("messages retrieved successfully")
 	json.NewEncoder(w).Encode(messages)
 }

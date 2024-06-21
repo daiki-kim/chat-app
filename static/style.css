@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#app {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+input, button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+#rooms {
+    margin: 20px 0;
+}
+
+#messages {
+    margin: 20px 0;
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
