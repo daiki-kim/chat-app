@@ -10,7 +10,8 @@ func CreateRoom(name string, ownerID int, userIDs []int) error {
 		Name:    name,
 		OwnerID: ownerID,
 	}
-	err := repositories.CreateRoom(room)
+	// Create "room" data and add ID to "room"
+	room, err := repositories.CreateRoom(room)
 	if err != nil {
 		return err
 	}

@@ -38,12 +38,12 @@ func NewClaim(userID int) *CustomClaim {
 
 func (c *CustomClaim) GenerateToken() (string, error) {
 	claims := jwt.RegisteredClaims{
-		ID:        uuid.New().String(),
 		Issuer:    Issuer,
 		Subject:   Subject,
 		Audience:  []string{Audience},
 		IssuedAt:  jwt.NewNumericDate(time.Now().Local()),
 		ExpiresAt: jwt.NewNumericDate(time.Now().Local().Add(TokenExpiration)),
+		ID:        uuid.New().String(),
 	}
 	if err := copier.CopyWithOption(c, claims, copier.Option{IgnoreEmpty: true, DeepCopy: true}); err != nil {
 		logger.Error("failed to copy claim", zap.Error(err))

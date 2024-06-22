@@ -48,6 +48,10 @@ func handleMessages() {
 	}
 }
 
+func init() {
+	go handleMessages()
+}
+
 func ChatRoom(w http.ResponseWriter, r *http.Request) {
 	roomIDStr := r.URL.Query().Get("room_id")
 	roomID, err := strconv.Atoi(roomIDStr)
@@ -77,7 +81,8 @@ func ChatRoom(w http.ResponseWriter, r *http.Request) {
 	clients[client] = true
 	mutex.Unlock()
 
-	go handleMessages()
+	// out of func
+	// go handleMessages()
 
 	// Listen for messages from the client
 	for {

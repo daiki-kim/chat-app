@@ -2,13 +2,26 @@ package repositories
 
 import "github.com/daiki-kim/chat-app/app/models"
 
-func CreateRoom(room *models.Room) error {
-	_, err := models.DB.Exec(
-		"INSERT INTO rooms (name, owner_id) VALUES ($1, $2)",
+// Postgres isn't support "LastInsertId()"...?
+// func CreateRoom(room *models.Room) error {
+// 	_, err := models.DB.Exec(
+// 		"INSERT INTO rooms (name, owner_id) VALUES ($1, $2)",
+// 		room.Name,
+// 		room.OwnerID,
+// 	)
+// 	return err
+// }
+
+func CreateRoom(room *models.Room) (*models.Room, error) {
+	err := models.DB.QueryRow(
+		"INSERT INTO rooms (name, owner_id) VALUES ($1, $2) RETURNING id",
 		room.Name,
 		room.OwnerID,
-	)
-	return err
+	).Scan(&room.ID)
+	if err != nil {
+		return nil, err
+	}
+	return room, nil
 }
 
 func GetRoomsByUser(userID int) ([]*models.Room, error) {
