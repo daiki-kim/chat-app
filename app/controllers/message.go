@@ -8,12 +8,13 @@ import (
 	"github.com/daiki-kim/chat-app/app/services"
 	"github.com/daiki-kim/chat-app/pkg/auth"
 	"github.com/daiki-kim/chat-app/pkg/logger"
+	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 )
 
 func CreateMessage(w http.ResponseWriter, r *http.Request) {
 	senderID := auth.GetUserIDFromContext(r.Context())
-	roomIDStr := r.URL.Query().Get("room_id")
+	roomIDStr := mux.Vars(r)["room_id"]
 	roomID, err := strconv.Atoi(roomIDStr)
 	if err != nil {
 		logger.Error("failed to parse room id", zap.Error(err))
@@ -42,7 +43,7 @@ func CreateMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetMessagesForRoom(w http.ResponseWriter, r *http.Request) {
-	roomIDStr := r.URL.Query().Get("room_id")
+	roomIDStr := mux.Vars(r)["room_id"]
 	roomID, err := strconv.Atoi(roomIDStr)
 	if err != nil {
 		logger.Error("failed to parse room id", zap.Error(err))
