@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 
@@ -53,7 +54,7 @@ func init() {
 }
 
 func ChatRoom(w http.ResponseWriter, r *http.Request) {
-	roomIDStr := r.URL.Query().Get("room_id")
+	roomIDStr := mux.Vars(r)["room_id"]
 	roomID, err := strconv.Atoi(roomIDStr)
 	if err != nil {
 		logger.Error("failed to parse room id", zap.Error(err))
