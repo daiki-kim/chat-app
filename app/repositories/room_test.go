@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/daiki-kim/chat-app/app/models"
+	"github.com/daiki-kim/chat-app/app/repositories"
 	"github.com/daiki-kim/chat-app/pkg/tester"
 	"github.com/stretchr/testify/suite"
 )
@@ -24,5 +25,9 @@ func (suite *RoomeTestSuite) SetupSuite() {
 }
 
 func (suite *RoomeTestSuite) TestCreateRoom() {
-
+	room, err := repositories.CreateRoom(&models.Room{
+		Name: "test",
+	})
+	suite.Assert().Nil(err)
+	suite.Assert().Equal("test", room.Name)
 }
