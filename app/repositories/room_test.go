@@ -10,24 +10,29 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type RoomeTestSuite struct {
+type RoomTestSuite struct {
 	tester.DBSQLiteSuite
 	originalDB *sql.DB
 }
 
 func TestRoomTestSuite(t *testing.T) {
-	suite.Run(t, new(RoomeTestSuite))
+	suite.Run(t, new(RoomTestSuite))
 }
 
-func (suite *RoomeTestSuite) SetupSuite() {
+func (suite *RoomTestSuite) SetupSuite() {
 	suite.DBSQLiteSuite.SetupSuite()
 	suite.originalDB = models.DB
 }
 
-func (suite *RoomeTestSuite) TestCreateRoom() {
+func (suite *RoomTestSuite) TestCreateRoom() {
 	room, err := repositories.CreateRoom(&models.Room{
 		Name: "test",
 	})
 	suite.Assert().Nil(err)
 	suite.Assert().Equal("test", room.Name)
+}
+
+func (suite *RoomTestSuite) TestAddRoomMember() {
+	err := repositories.AddRoomMember(1, 2)
+	suite.Assert().Nil(err)
 }
