@@ -33,6 +33,18 @@ func (suite *MessageTestSuite) TestCreateMessage() {
 	suite.Assert().Nil(err)
 }
 
-// func (suite *MessageTestSuite) GetMessageByRoom() ([]*models.Message, error) {
+func (suite *MessageTestSuite) TestGetMessageByRoom() {
+	_ = repositories.CreateMessage(&models.Message{
+		RoomID:   1,
+		SenderID: 1,
+		Content:  "test",
+	})
 
-// }
+	messages, err := repositories.GetMessagesByRoom(1)
+	suite.Assert().Nil(err)
+	suite.Assert().Equal(1, len(messages))
+	suite.Assert().Equal(1, messages[0].RoomID)
+	suite.Assert().Equal(1, messages[0].SenderID)
+	suite.Assert().NotNil(messages[0].Timestamp)
+	suite.Assert().Equal("test", messages[0].Content)
+}
