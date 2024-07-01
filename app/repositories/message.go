@@ -14,7 +14,7 @@ func CreateMessage(message *models.Message) error {
 
 func GetMessagesByRoom(roomID int) ([]*models.Message, error) {
 	rows, err := models.DB.Query(
-		"SELECT id, room_id, sender_id, content, timestamp FROM messages WHERE room_id = ?",
+		"SELECT id, room_id, sender_id, content, timestamp FROM messages WHERE room_id = $1",
 		roomID,
 	)
 	if err != nil {
