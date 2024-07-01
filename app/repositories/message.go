@@ -14,7 +14,7 @@ func CreateMessage(message *models.Message) error {
 
 func GetMessagesByRoom(roomID int) ([]*models.Message, error) {
 	rows, err := models.DB.Query(
-		"SELECT id, room_id, sender_id, content, timestamp FROM messages WHERE room_id = $1",
+		"SELECT id, room_id, sender_id, content, timestamp FROM messages WHERE room_id = ?",
 		roomID,
 	)
 	if err != nil {
@@ -25,7 +25,7 @@ func GetMessagesByRoom(roomID int) ([]*models.Message, error) {
 	messages := []*models.Message{}
 	for rows.Next() {
 		message := &models.Message{}
-		if err := rows.Scan(&message.ID, &message.SenderID, &message.Content, &message.Timestamp); err != nil {
+		if err := rows.Scan(&message.ID, &message.RoomID, &message.SenderID, &message.Content, &message.Timestamp); err != nil {
 			return nil, err
 		}
 		messages = append(messages, message)

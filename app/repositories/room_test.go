@@ -15,6 +15,10 @@ type RoomTestSuite struct {
 	originalDB *sql.DB
 }
 
+func AfterTest(suite *RoomTestSuite) {
+	models.DB = suite.originalDB
+}
+
 func TestRoomTestSuite(t *testing.T) {
 	suite.Run(t, new(RoomTestSuite))
 }
